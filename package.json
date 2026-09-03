@@ -1,0 +1,13 @@
+{
+  "name": "comparador-ahorro-liquidez",
+  "version": "1.0.0",
+  "description": "Progressive Web App (PWA) de comparación de precios y optimización de liquidez.",
+  "scripts": {
+    "start": "npx serve public -l 5000",
+    "serve": "npx firebase emulators:start --only hosting",
+    "deploy": "npx firebase deploy --only hosting"
+  },
+  "keywords": ["pwa", "reduflacion", "ahorro", "firebase", "offline-first"],
+  "author": "",
+  "license": "MIT"
+}

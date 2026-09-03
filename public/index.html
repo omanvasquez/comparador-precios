@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="description" content="Calculadora PWA de Ahorro Real y Liquidez para combatir la reduflación en las compras diarias.">
+  <meta name="theme-color" content="#090d16">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Ahorro Real">
+
+  <title>Ahorro Real & Liquidez | Comparador PWA</title>
+
+  <!-- PWA Manifest & Icons -->
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" type="image/svg+xml" href="/icons/icon.svg">
+  <link rel="apple-touch-icon" href="/icons/icon-192.png">
+
+  <!-- Core Stylesheet -->
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="brand-row">
+        <div class="brand-info">
+          <div class="brand-logo">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M16 16l3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1z"></path>
+              <path d="M2 16l3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1z"></path>
+              <path d="M7 21h10"></path>
+              <path d="M12 3v18"></path>
+              <path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"></path>
+            </svg>
+          </div>
+          <div>
+            <h1 class="brand-title">Ahorro Real & Liquidez</h1>
+            <p class="brand-subtitle">Comparador anti-reduflación</p>
+          </div>
+        </div>
+
+        <div class="header-actions">
+          <span id="offlineStatus" class="status-badge" title="Estado de conexión">
+            <span class="status-dot"></span>
+            <span class="status-label">Offline Ready</span>
+          </span>
+          <button id="themeToggleBtn" class="icon-btn" aria-label="Cambiar modo claro / oscuro" title="Cambiar tema">
+            <!-- Sun icon (shown in dark mode to switch to light) -->
+            <svg id="themeIconSun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="5"></circle>
+              <line x1="12" y1="1" x2="12" y2="3"></line>
+              <line x1="12" y1="21" x2="12" y2="23"></line>
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+              <line x1="1" y1="12" x2="3" y2="12"></line>
+              <line x1="21" y1="12" x2="23" y2="12"></line>
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+            </svg>
+            <!-- Moon icon (shown in light mode to switch to dark) -->
+            <svg id="themeIconMoon" class="hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+          </button>
+          <button id="resetBtn" class="icon-btn" aria-label="Limpiar campos" title="Reiniciar comparación">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path>
+              <path d="M21 3v5h-5"></path>
+              <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path>
+              <path d="M3 21v-5h5"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Unit Selector (Sólidos g / Líquidos ml) -->
+      <div class="unit-selector">
+        <button type="button" class="unit-toggle active" data-unit="weight">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+            <line x1="7" y1="7" x2="7.01" y2="7"></line>
+          </svg>
+          Sólidos (Gramos &rarr; Bs/kg)
+        </button>
+        <button type="button" class="unit-toggle" data-unit="volume">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"></path>
+          </svg>
+          Líquidos (Mililitros &rarr; Bs/L)
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Comparison Cards Grid -->
+    <main class="comparison-grid">
+      <!-- Opción A -->
+      <section class="option-card option-a" aria-label="Opción A">
+        <div class="card-header">
+          <div class="card-badge a-badge">Opción A</div>
+          <span class="card-meta">Presentación 1</span>
+        </div>
+
+        <div class="input-group">
+          <label for="priceA" class="input-label">Precio de compra</label>
+          <div class="input-wrapper">
+            <span class="input-prefix">Bs</span>
+            <input
+              id="priceA"
+              type="text"
+              inputmode="decimal"
+              placeholder="0.00"
+              autocomplete="off"
+              autocorrect="off"
+              spellcheck="false"
+              class="realtime-input"
+            />
+          </div>
+        </div>
+
+        <div class="input-group">
+          <label for="qtyA" class="input-label">
+            Contenido neto <span class="unit-label-current">(g)</span>
+          </label>
+          <div class="input-wrapper">
+            <input
+              id="qtyA"
+              type="text"
+              inputmode="numeric"
+              placeholder="ej. 500"
+              autocomplete="off"
+              autocorrect="off"
+              spellcheck="false"
+              class="realtime-input"
+            />
+            <span class="input-suffix unit-suffix-current">g</span>
+          </div>
+
+          <!-- Quick chips -->
+          <div class="chips-container" data-target="qtyA">
+            <span class="chips-hint">Frecuentes:</span>
+            <button type="button" class="chip-btn" data-value="250">250<span class="chip-unit">g</span></button>
+            <button type="button" class="chip-btn" data-value="500">500<span class="chip-unit">g</span></button>
+            <button type="button" class="chip-btn" data-value="900">900<span class="chip-unit">g</span></button>
+            <button type="button" class="chip-btn" data-value="1000">1.000<span class="chip-unit">g</span></button>
+          </div>
+        </div>
+
+        <!-- Calculated Live Metric for Option A -->
+        <div class="standard-preview" id="previewA">
+          <div class="preview-metric">
+            <span class="preview-label">Precio Estandarizado (1.000 <span class="unit-abbr">g</span>):</span>
+            <span class="preview-value" id="stdValueA">--</span>
+          </div>
+          <div class="preview-footer">
+            <span class="preview-outlay">Desembolso: <strong id="outlayValueA">--</strong></span>
+            <span class="preview-tag" id="tagA"></span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Opción B -->
+      <section class="option-card option-b" aria-label="Opción B">
+        <div class="card-header">
+          <div class="card-badge b-badge">Opción B</div>
+          <span class="card-meta">Presentación 2</span>
+        </div>
+
+        <div class="input-group">
+          <label for="priceB" class="input-label">Precio de compra</label>
+          <div class="input-wrapper">
+            <span class="input-prefix">Bs</span>
+            <input
+              id="priceB"
+              type="text"
+              inputmode="decimal"
+              placeholder="0.00"
+              autocomplete="off"
+              autocorrect="off"
+              spellcheck="false"
+              class="realtime-input"
+            />
+          </div>
+        </div>
+
+        <div class="input-group">
+          <label for="qtyB" class="input-label">
+            Contenido neto <span class="unit-label-current">(g)</span>
+          </label>
+          <div class="input-wrapper">
+            <input
+              id="qtyB"
+              type="text"
+              inputmode="numeric"
+              placeholder="ej. 900"
+              autocomplete="off"
+              autocorrect="off"
+              spellcheck="false"
+              class="realtime-input"
+            />
+            <span class="input-suffix unit-suffix-current">g</span>
+          </div>
+
+          <!-- Quick chips -->
+          <div class="chips-container" data-target="qtyB">
+            <span class="chips-hint">Frecuentes:</span>
+            <button type="button" class="chip-btn" data-value="250">250<span class="chip-unit">g</span></button>
+            <button type="button" class="chip-btn" data-value="500">500<span class="chip-unit">g</span></button>
+            <button type="button" class="chip-btn" data-value="900">900<span class="chip-unit">g</span></button>
+            <button type="button" class="chip-btn" data-value="1000">1.000<span class="chip-unit">g</span></button>
+          </div>
+        </div>
+
+        <!-- Calculated Live Metric for Option B -->
+        <div class="standard-preview" id="previewB">
+          <div class="preview-metric">
+            <span class="preview-label">Precio Estandarizado (1.000 <span class="unit-abbr">g</span>):</span>
+            <span class="preview-value" id="stdValueB">--</span>
+          </div>
+          <div class="preview-footer">
+            <span class="preview-outlay">Desembolso: <strong id="outlayValueB">--</strong></span>
+            <span class="preview-tag" id="tagB"></span>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Semáforo de Decisión / Abogado del Diablo Section -->
+    <section class="verdict-section" id="verdictSection" aria-live="polite">
+      <!-- Initial Placeholder state -->
+      <div class="verdict-card empty" id="verdictEmpty">
+        <div class="verdict-icon empty-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="16" x2="12" y2="12"></line>
+            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+          </svg>
+        </div>
+        <h3 class="verdict-title">Ingresa precios y cantidades</h3>
+        <p class="verdict-desc">El análisis de liquidez vs. ahorro real se calculará automáticamente al teclear.</p>
+      </div>
+
+      <!-- Active Traffic Light Card -->
+      <div class="verdict-card active hidden" id="verdictActive">
+        <div class="verdict-header">
+          <div class="traffic-indicator" id="trafficIndicator">
+            <span class="traffic-light-bulb"></span>
+          </div>
+          <div class="verdict-heading-group">
+            <span class="verdict-badge" id="trafficBadge">--</span>
+            <h2 class="verdict-main-title" id="verdictTitle">--</h2>
+          </div>
+          <div class="savings-pct-pill" id="savingsPctPill">
+            <span class="savings-number" id="savingsPctValue">0.0</span>%
+            <span class="savings-label">Ahorro Unitario</span>
+          </div>
+        </div>
+
+        <div class="verdict-body">
+          <div class="recommendation-box" id="recommendationBox">
+            <span class="recommendation-lead">Veredicto Estratégico:</span>
+            <p class="recommendation-text" id="recommendationText">--</p>
+          </div>
+
+          <div class="financial-breakdown" id="financialBreakdown">
+            <div class="breakdown-item">
+              <span class="breakdown-label">Desembolso Inmediato</span>
+              <span class="breakdown-val" id="breakdownOutlay">--</span>
+            </div>
+            <div class="breakdown-item">
+              <span class="breakdown-label">Costo por 1.000 <span class="unit-abbr">g</span></span>
+              <span class="breakdown-val" id="breakdownStandard">--</span>
+            </div>
+            <div class="breakdown-item">
+              <span class="breakdown-label">Diferencia de Capital</span>
+              <span class="breakdown-val" id="breakdownDiff">--</span>
+            </div>
+          </div>
+
+          <div class="advice-note" id="adviceNote">
+            <!-- Dynamic micro-copy -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PWA Install Banner (Shown when browser triggers beforeinstallprompt) -->
+    <div class="install-banner hidden" id="installBanner">
+      <div class="install-info">
+        <div class="install-icon">⚡</div>
+        <div>
+          <strong>Instalar Ahorro Real</strong>
+          <p>Úsala sin conexión en el supermercado</p>
+        </div>
+      </div>
+      <div class="install-actions">
+        <button id="installDismissBtn" class="btn-secondary">Ahora no</button>
+        <button id="installActionBtn" class="btn-primary">Instalar</button>
+      </div>
+    </div>
+
+    <!-- Philosophy Footer & Developer Credit -->
+    <footer class="app-footer">
+      <p>Calculadora de Ahorro Real & Liquidez &bull; Regla 1.000g/ml &bull; 100% Offline</p>
+      <p class="developer-credit">
+        Desarrollado por <a href="https://oman-vasquez.web.app/" target="_blank" rel="noopener noreferrer" class="dev-link">Oman Vasquez</a>
+      </p>
+    </footer>
+  </div>
+
+  <script src="/app.js"></script>
+</body>
+</html>
